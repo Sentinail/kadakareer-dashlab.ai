@@ -10,99 +10,99 @@
     Output : 
     [[name: "John"], [surname: "Doe"], [age: "25"], [sex: "male"]]
 */
-const result = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg1.json")
-const result2 = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg2.json")
-const textractUtils = require("../utils/textractUtils")
+const result = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg1.json");
+const result2 = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg2.json");
+const textractUtils = require("../utils/textractUtils");
 
 const {
-	TextractClient,
-	AnalyzeDocumentCommand,
+  TextractClient,
+  AnalyzeDocumentCommand,
 } = require("@aws-sdk/client-textract");
 
 const client = new TextractClient({
-	region: "us-east-1",
+  region: "us-east-1",
 });
 
 const dpl = (documentBuffers) => {
-    // Implement logic here
-    return null
-}
+  // Implement logic here
+  return null;
+};
 
 const dps = (documentBuffers) => {
-    // Implement logic here
-    return null
-}
+  // Implement logic here
+  return null;
+};
 
 const dprl = (documentBuffers) => {
-    // Implement logic here
-    return null
-}
+  // Implement logic here
+  return null;
+};
 
 const dprs = (documentBuffers) => {
-    // Implement logic here
-    return null
-}
+  // Implement logic here
+  return null;
+};
 
 const mai = (documentBuffers) => {
-    // Implement logic here
-    return null
-}
+  // Implement logic here
+  return null;
+};
 
 const magef = (documentBuffers) => {
-    const textractResults = []
-    
-    documentBuffers.forEach((documentBuffer) => {
-        const command = new AnalyzeDocumentCommand({
-            Document: {
-                Bytes: documentBuffer,
-            },
-            FeatureTypes: ["TABLES", "FORMS", "SIGNATURES", "LAYOUT"]
-        })
+  const textractResults = [];
 
-        client.send(command).then((result) => {
-            textractResults.push(result)
-        })
-    })
+  documentBuffers.forEach((documentBuffer) => {
+    const command = new AnalyzeDocumentCommand({
+      Document: {
+        Bytes: documentBuffer,
+      },
+      FeatureTypes: ["TABLES", "FORMS", "SIGNATURES", "LAYOUT"],
+    });
 
-    const extractionResults = []
-    textractResults.forEach((textractResult, index) => {
-        const keyValues = textractUtils.extractKeyValuePairs(textractResult)
-        const tables = textractUtils.getTableValues(textractResult)
+    client.send(command).then((result) => {
+      textractResults.push(result);
+    });
+  });
 
-        extractionResults.push({
-            page: index + 1,
-            key_values: keyValues,
-            tables: tables
-        })
-    })
-    
-    return extractionResults
-}
+  const extractionResults = [];
+  textractResults.forEach((textractResult, index) => {
+    const keyValues = textractUtils.extractKeyValuePairs(textractResult);
+    const tables = textractUtils.getTableValues(textractResult);
+
+    extractionResults.push({
+      page: index + 1,
+      key_values: keyValues,
+      tables: tables,
+    });
+  });
+
+  return extractionResults;
+};
 
 // Input : documentBuffers
 /* Output : 
     [
         {
-            page: int
+            document: int
             extractedWord: string[]
         }
     ]
 */
 const extractWords = (documentBuffers) => {
-    const textractResult = [result, result2]
+  const textractResult = [result, result2];
 
-    textractResult.forEach(result => {
-        console.log(result)
-    })
-}
+  textractResult.forEach((result) => {
+    console.log(result);
+  });
+};
 
-extractWords()
+extractWords();
 
 module.exports = {
-    dpl,
-    dps,
-    dprl,
-    dprs,
-    mai,
-    magef
-}
+  dpl,
+  dps,
+  dprl,
+  dprs,
+  mai,
+  magef,
+};
