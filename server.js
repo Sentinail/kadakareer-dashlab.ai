@@ -10,7 +10,6 @@ app.use(cors({
 // Express Routes
 app.use("/api", require("./routes/scanDocsRoute"))
 
-
 const port = 9000
 app.listen(port, () => {
     console.log(`listening on port: ${port}`)

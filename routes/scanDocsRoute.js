@@ -57,10 +57,31 @@ router.post("/MFOWS-Annex_G-Psychological_Evaluation_Form", upload.array("docume
     const documentBuffers = req.files?.map((file) => {
         return file.buffer
     })
+
+    const result = documentHandler.magef(documentBuffers)
     
-    // handle the file using documentHandler.magef(documentBuffers) here
- 
-    res.send("Result")
+    res.json({
+        result: result
+    })
+})
+
+// Input : Document buffers
+/* Output : 
+    [
+        {
+            page: int
+            extractedWord: string[]
+        }
+    ]
+*/
+router.post("/extract_document_texts", upload.array("document"), (req, res) => {
+    const documentBuffers = req.files?.map((file) => {
+        return file.buffer
+    })
+
+    res.json({
+        result: "DITO NIYO ILAGAY YUNG OUTPUT"
+    })
 })
 
 module.exports = router

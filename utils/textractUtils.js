@@ -205,6 +205,7 @@ const getTableValues = (textractResult) => {
 	return tableKeyValuePairs
 }
 
+
 module.exports = {
     extractLines,
     extractKeyValuePairs,
