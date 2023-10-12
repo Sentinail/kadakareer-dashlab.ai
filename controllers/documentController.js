@@ -10,10 +10,8 @@
     Output : 
     [[name: "John"], [surname: "Doe"], [age: "25"], [sex: "male"]]
 */
-
 const result = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg1.json")
 const result2 = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg2.json")
-
 const textractUtils = require("../utils/textractUtils")
 
 const {
@@ -51,14 +49,22 @@ const mai = (documentBuffers) => {
 }
 
 const magef = (documentBuffers) => {
-    // Get textractResult using textract
+    const textractResults = []
+    
+    documentBuffers.forEach((documentBuffer) => {
+        const command = new AnalyzeDocumentCommand({
+            Document: {
+                Bytes: documentBuffer,
+            },
+            FeatureTypes: ["TABLES", "FORMS", "SIGNATURES", "LAYOUT"]
+        })
 
-    // Test textractResults
-    const textractResults = [result, result2]
+        client.send(command).then((result) => {
+            textractResults.push(result)
+        })
+    })
 
-    // Array of Textract Results
     const extractionResults = []
-
     textractResults.forEach((textractResult, index) => {
         const keyValues = textractUtils.extractKeyValuePairs(textractResult)
         const tables = textractUtils.getTableValues(textractResult)
@@ -70,10 +76,27 @@ const magef = (documentBuffers) => {
         })
     })
     
-    console.log(extractionResults)
+    return extractionResults
 }
 
-magef()
+// Input : documentBuffers
+/* Output : 
+    [
+        {
+            page: int
+            extractedWord: string[]
+        }
+    ]
+*/
+const extractWords = (documentBuffers) => {
+    const textractResult = [result, result2]
+
+    textractResult.forEach(result => {
+        console.log(result)
+    })
+}
+
+extractWords()
 
 module.exports = {
     dpl,
