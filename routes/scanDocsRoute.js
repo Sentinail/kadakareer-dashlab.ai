@@ -69,7 +69,7 @@ router.post("/MFOWS-Annex_G-Psychological_Evaluation_Form", upload.array("docume
 /* Output : 
     [
         {
-            page: int
+            documentPage: int
             extractedWord: string[]
         }
     ]
