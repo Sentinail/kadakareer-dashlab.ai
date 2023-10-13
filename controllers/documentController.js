@@ -91,9 +91,19 @@ const magef = (documentBuffers) => {
 const extractWords = (documentBuffers) => {
   const textractResult = [result, result2];
 
-  textractResult.forEach((result) => {
-    console.log(result);
-  });
+  const getkvp = (res) => {
+    let a = res
+      .map((e) => e.Text)
+      .filter((e) => e?.includes(":"))
+      .map((e) => e.split(":"))
+      .filter((e) => Boolean(e[1]) && e[0] !== "Revision");
+
+    return a;
+  };
+
+  let blocks = textractResult.map((res) => res.Blocks);
+
+  console.log(blocks.map((e) => getkvp(e)));
 };
 
 extractWords();
