@@ -93,7 +93,9 @@ const extractWords = (documentBuffers) => {
 
   let blocks = textractResult.map((res) => res.Blocks);
 
-  let a = blocks.map((e) => e.map((e) => e.Text));
+  let a = blocks.map((e) =>
+    e.map((e) => e.Text).filter((e) => e !== undefined)
+  );
   let index = 0;
   a = a.map((e) => {
     index++;
