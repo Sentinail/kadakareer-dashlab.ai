@@ -89,14 +89,24 @@ const magef = (documentBuffers) => {
     ]
 */
 const extractWords = (documentBuffers) => {
-    const textractResult = [result, result2]
-
-    textractResult.forEach(result => {
-        console.log(result)
-    })
-}
-
-extractWords()
+    const textractResult = [result, result2];
+  
+    let blocks = textractResult.map((res) => res.Blocks);
+  
+    let a = blocks.map((e) =>
+      e.map((e) => e.Text).filter((e) => e !== undefined)
+    );
+    let index = 0;
+    a = a.map((e) => {
+      index++;
+      return { document: index, extractedWord: e };
+    });
+  
+    console.log(a);
+    //return a
+  };
+  
+  extractWords();
 
 module.exports = {
     dpl,
