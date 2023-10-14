@@ -89,22 +89,26 @@ const magef = async (documentBuffers) => {
     ]
 */
 
-
 const extractWords = async (documentBuffers) => {
-  const textractResult = await sendRequestToTextractClient(documentBuffers, AnalyzeDocumentCommand, client)
+  const textractResult = await textractUtils.sendRequestToTextractClient(
+    documentBuffers,
+    AnalyzeDocumentCommand,
+    client
+  );
 
   let blocks = textractResult.map((res) => res.Blocks);
 
   let a = blocks.map((e) =>
-    e.map((e) => e.Text).filter((e) => e !== undefined)
+    e.filter((z) => z.BlockType === "WORD").map((e) => e.Text)
   );
+
   let index = 0;
   a = a.map((e) => {
     index++;
     return { documentPage: index, extractedWord: e };
   });
 
-  return a
+  return a;
 };
 
 module.exports = {
@@ -114,5 +118,5 @@ module.exports = {
   dprs,
   mai,
   magef,
-  extractWords
+  extractWords,
 };
