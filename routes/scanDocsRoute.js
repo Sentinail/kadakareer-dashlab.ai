@@ -4,69 +4,69 @@ const upload = require("../middlewares/multerMiddleware");
 const documentHandler = require("../controllers/documentController");
 
 router.post("/DOH-PEME-LB", upload.array("document"), (req, res) => {
-  const documentBuffers = req.files?.map((file) => {
-    return file.buffer;
-  });
+	const documentBuffers = req.files?.map((file) => {
+		return file.buffer;
+	});
 
-  // handle the file using documentHandler.dpl(documentBuffers) here
+	// handle the file using documentHandler.dpl(documentBuffers) here
 
-  res.send("Result");
+	res.send("Result");
 });
 
 router.post("/DOH-PEME-SB", upload.array("document"), (req, res) => {
-  const documentBuffers = req.files?.map((file) => {
-    return file.buffer;
-  });
+	const documentBuffers = req.files?.map((file) => {
+		return file.buffer;
+	});
 
-  // handle the file using documentHandler.dps(documentBuffers) here
+	// handle the file using documentHandler.dps(documentBuffers) here
 
-  res.send("Result");
+	res.send("Result");
 });
 
 router.post("/DOH-PEMER-LB", upload.array("document"), (req, res) => {
-  const documentBuffers = req.files?.map((file) => {
-    return file.buffer;
-  });
+	const documentBuffers = req.files?.map((file) => {
+		return file.buffer;
+	});
 
-  // handle the file using documentHandler.dprl(documentBuffers) here
+	// handle the file using documentHandler.dprl(documentBuffers) here
 
-  res.send("Result");
+	res.send("Result");
 });
 
 router.post("/DOH-PEMER-SB", upload.array("document"), (req, res) => {
-  const documentBuffers = req.files?.map((file) => {
-    return file.buffer;
-  });
+	const documentBuffers = req.files?.map((file) => {
+		return file.buffer;
+	});
 
-  // handle the file using documentHandler.dprs(documentBuffers) here
+	// handle the file using documentHandler.dprs(documentBuffers) here
 
-  res.send("Result");
+	res.send("Result");
 });
 
 router.post("/MFOWS-Annex_I-HIVST", upload.array("document"), (req, res) => {
-  const documentBuffers = req.files?.map((file) => {
-    return file.buffer;
-  });
+	const documentBuffers = req.files?.map((file) => {
+		return file.buffer;
+	});
 
-  // handle the file using documentHandler.mai(documentBuffers) here
+	// handle the file using documentHandler.mai(documentBuffers) here
 
-  res.send("Result");
+	res.send("Result");
 });
 
 router.post(
-  "/MFOWS-Annex_G-Psychological_Evaluation_Form",
-  upload.array("document"),
-  (req, res) => {
-    const documentBuffers = req.files?.map((file) => {
-      return file.buffer;
-    });
+	"/MFOWS-Annex_G-Psychological_Evaluation_Form",
+	upload.array("document"),
+	(req, res) => {
+		const documentBuffers = req.files?.map((file) => {
+			return file.buffer;
+		});
 
-    const result = documentHandler.magef(documentBuffers);
+		const result = documentHandler.magef(documentBuffers);
 
-    res.json({
-      result: result,
-    });
-  }
+		res.json({
+			result: result,
+		});
+	}
 );
 
 // Input : Document buffers
@@ -79,19 +79,19 @@ router.post(
     ]
 */
 router.post(
-  "/extract_document_texts",
-  upload.array("document"),
-  async (req, res) => {
-    const documentBuffers = req.files?.map((file) => {
-      return file.buffer;
-    });
+	"/extract_document_texts",
+	upload.array("document"),
+	async (req, res) => {
+		const documentBuffers = req.files?.map((file) => {
+			return file.buffer;
+		});
 
-    const result = await documentHandler.extractWords(documentBuffers);
-    console.log(result);
-    res.json({
-      result: result,
-    });
-  }
+		const result = await documentHandler.extractWords(documentBuffers);
+		console.log(result);
+		res.json({
+			result: result,
+		});
+	}
 );
 
 module.exports = router;

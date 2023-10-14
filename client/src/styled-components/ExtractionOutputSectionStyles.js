@@ -28,7 +28,6 @@ export const ExtractedWordBlockStyle = styled.div`
     padding: 10px;
     background-color: ${props => {return props.$tertiaryColor}};
     border-radius: 10px;
-    width: 100px;
 `
 
 export const ExtractedPageBlockStyle = styled.div`

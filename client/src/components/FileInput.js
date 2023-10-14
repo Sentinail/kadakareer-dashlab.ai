@@ -13,7 +13,7 @@ const FileInput = ({setFiles}) => {
     return (
         <>
             <FileInputStyleContainer $tertiaryColor={tertiaryColor}>
-                <input onChange={(e) => {handleFileChange(e)}} type="file" id="fileInput" className="file-input" multiple={true} accept=".jpg, .jpeg, .png, .pdf"/>
+                <input onChange={(e) => {handleFileChange(e)}} type="file" id="fileInput" className="file-input" multiple={true} accept="image/*"/>
                 <label htmlFor="fileInput" className="custom-label"><p> Input Files </p></label>
             </FileInputStyleContainer>
         </>

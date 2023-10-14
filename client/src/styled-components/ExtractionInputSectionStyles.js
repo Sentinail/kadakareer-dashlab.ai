@@ -22,11 +22,32 @@ export const ExtractionInputSectionStyles = styled.div`
         align-items: center;
         overflow-x: scroll;
         overflow-y: hidden;
-
-        & .input_image {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-        }
     }
+`
+
+
+export const ImageInputStyle = styled.div`
+    position: relative;
+
+    & .close_button {
+        position: absolute;
+        top: 0;
+        left: 100%;
+        width: 25px;
+        height: 25px;
+        background-color: ${props => {return props.$tertiaryColor}};
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;    
+        transform: translate(-50%, -50%);
+        border-radius: 100%;
+        cursor: pointer;
+    }
+`
+
+export const Image = styled.img`
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
 `

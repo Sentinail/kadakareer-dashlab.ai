@@ -8,7 +8,7 @@ const sampleResult = {
 	result: [
 		{
 			documentPage: 1,
-			extractedWord: ["Hello-1", "World-1", "Hi-1", "Wilson-1"]
+			extractedWord: ["Hello-1", "World-1", "Hi-1", "Wilson-1", "LoremIpsumDoret", "LoremIpsumDoret", "LoremIpsumDoret"]
 		},
 		{
 			documentPage: 2,

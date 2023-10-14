@@ -22,13 +22,11 @@ const DropdownButton = ({ buttonName, linkItems=[] }) => {
                 </Button>
                 <div className="dropdown_item_container">
                     {
-                        linkItems.map(linkItem => {
-                            return (
-                                <>
-                                    <DropdownItemContainerStyles> 
-                                        <Link to={linkItem.linkItemPath}> { linkItem.linkItemName } </Link> 
-                                    </DropdownItemContainerStyles>
-                                </>
+                        linkItems.map((linkItem, index) => {
+                            return (    
+                                <DropdownItemContainerStyles key={index}> 
+                                    <Link to={linkItem.linkItemPath}> { linkItem.linkItemName } </Link> 
+                                </DropdownItemContainerStyles>
                             )
                         })
                     }
