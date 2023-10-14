@@ -37,7 +37,7 @@ const ExtractAllDocumentTexts = () => {
 				</div>
 				<div className="extraction_section">
 					<ExtractionInputSection
-						url={"http://localhost:9000/extract_document_texts"}
+						url={"http://localhost:9000/api/extract_document_texts"}
                         setResult={setResult}
 					></ExtractionInputSection>
 					{result && 

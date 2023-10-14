@@ -23,7 +23,7 @@ const client = new TextractClient({
   region: "us-east-1",
 });
 
-const dpl = (documentBuffers) => {
+const dpl = async (documentBuffers) => {
   // Implement logic here
   return null;
 };
@@ -33,22 +33,22 @@ const dps = (documentBuffers) => {
   return null;
 };
 
-const dprl = (documentBuffers) => {
+const dprl = async (documentBuffers) => {
   // Implement logic here
   return null;
 };
 
-const dprs = (documentBuffers) => {
+const dprs = async (documentBuffers) => {
   // Implement logic here
   return null;
 };
 
-const mai = (documentBuffers) => {
+const mai = async (documentBuffers) => {
   // Implement logic here
   return null;
 };
 
-const magef = (documentBuffers) => {
+const magef = async (documentBuffers) => {
   const textractResults = [];
 
   documentBuffers.forEach((documentBuffer) => {
@@ -88,8 +88,10 @@ const magef = (documentBuffers) => {
         }
     ]
 */
-const extractWords = (documentBuffers) => {
-  const textractResult = [result, result2];
+
+
+const extractWords = async (documentBuffers) => {
+  const textractResult = await sendRequestToTextractClient(documentBuffers, AnalyzeDocumentCommand, client)
 
   let blocks = textractResult.map((res) => res.Blocks);
 
@@ -99,14 +101,11 @@ const extractWords = (documentBuffers) => {
   let index = 0;
   a = a.map((e) => {
     index++;
-    return { document: index, extractedWord: e };
+    return { documentPage: index, extractedWord: e };
   });
 
-  console.log(a);
-  //return a
+  return a
 };
-
-extractWords();
 
 module.exports = {
   dpl,
@@ -115,4 +114,5 @@ module.exports = {
   dprs,
   mai,
   magef,
+  extractWords
 };

@@ -79,8 +79,10 @@ router.post("/extract_document_texts", upload.array("document"), (req, res) => {
         return file.buffer
     })
 
+    const result = documentHandler.extractWords(documentBuffers)
+
     res.json({
-        result: "DITO NIYO ILAGAY YUNG OUTPUT"
+        result: result
     })
 })
 

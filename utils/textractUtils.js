@@ -205,10 +205,31 @@ const getTableValues = (textractResult) => {
 	return tableKeyValuePairs
 }
 
+const sendRequestToTextractClient = async (documentBuffers, AnalyzeDocumentCommand, client) => {
+    const textractResult = []
+
+	for (let i=0; i < documentBuffers.length; i++) {
+		const documentBuffer = documentBuffers[i]
+
+		const command = new AnalyzeDocumentCommand({
+			Document: {
+			  Bytes: documentBuffer,
+			},
+			FeatureTypes: ["TABLES", "FORMS", "SIGNATURES", "LAYOUT"],
+		  });
+	  
+		const result = await client.send(command)
+		textractResult.push(result)
+	}
+
+    return textractResult
+}
+
 
 module.exports = {
     extractLines,
     extractKeyValuePairs,
 	getTableValues,
-	extractAllRowIDs
+	extractAllRowIDs,
+	sendRequestToTextractClient
 }
