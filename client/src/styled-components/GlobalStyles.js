@@ -9,10 +9,10 @@ const GlobalStyles = createGlobalStyle`
     }
 
     body {  
-        background-color: ${props => {
-            return props.$secondaryColor
-        }};
+        background: rgb(0,0,0);
+        background: linear-gradient(45deg, rgba(0,0,0,1) 0%, ${props => {return props.$secondaryColor}} 50%, rgba(0,0,0,1) 100%);
         color: white;
+        min-height: 100vh;
     } 
 
     span {

@@ -3,14 +3,20 @@ import { StyledHeaderContainer } from "../styled-components/HeaderStyles";
 import DropdownButton from "./DropdownButton";
 import dashlabSVG from "../assets/DashlabsSVG.svg";
 import { useTheme } from "../contexts/themeContext";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
     const { primaryColor, secondaryColor, tertiaryColor } = useTheme()
+	const navigate = useNavigate()
+
+	const handleNavigate = () => {
+		navigate("/home")
+	}
 
 	return (
 		<>
 			<StyledHeaderContainer $primaryColor={primaryColor} $secondaryColor={secondaryColor} $tertiaryColor={tertiaryColor}>
-				<div>
+				<div className="dashlabs" onClick={handleNavigate} >
 					<img
 						src={dashlabSVG}
 						alt="Dashlab SVG"
