@@ -45,6 +45,7 @@ const dprs = async (documentBuffers) => {
 
 const mai = async (documentBuffers) => {
   // Implement logic here
+  console.log(documentBuffers);
   return null;
 };
 
