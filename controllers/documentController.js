@@ -13,6 +13,9 @@
 const result = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg1.json");
 const result2 = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg2.json");
 const textractUtils = require("../utils/textractUtils");
+const converter = require("json-2-csv")
+const fs = require("fs")
+const path = require("path")
 
 const {
   TextractClient,
@@ -111,6 +114,31 @@ const extractWords = async (documentBuffers) => {
   return a;
 };
 
+const readJSONToCSVAndStore = async (fileDirectory, filename, jsonDocuments) => {
+  try {
+    const filePath = path.join(fileDirectory, filename);
+
+    let existingCSV;
+    let existingJSON = [];
+
+    if (fs.existsSync(filePath)) {
+      existingCSV = fs.readFileSync(filePath, 'utf-8');
+      existingJSON = await converter.csv2json(existingCSV);
+    }
+
+    const newJSON = [...existingJSON, ...jsonDocuments];
+
+    const updatedCSV = await converter.json2csv(newJSON);
+    console.log(updatedCSV);
+
+    fs.writeFileSync(filePath, updatedCSV, 'utf-8');
+    console.log(`CSV data has been saved to ${filePath}`);
+    return updatedCSV
+  } catch (error) {
+    console.error('Error while reading, converting, or saving CSV:', error);
+  }
+};
+
 module.exports = {
   dpl,
   dps,
@@ -119,4 +147,5 @@ module.exports = {
   mai,
   magef,
   extractWords,
+  readJSONToCSVAndStore,
 };

@@ -94,4 +94,21 @@ router.post(
 	}
 );
 
+router.post("store_document", async (req, res) => {
+	const documentKeyValuePairs = req.body.data
+	const fileType = req.body.fileType
+
+	try {
+		const result = await documentHandler.readCSVToJSONAndStore("../csv", fileType, documentKeyValuePairs)
+		res.json({
+			status: "Success",
+			result: result
+		})
+	} catch (err) {
+		res.status(500).json({
+			status: "Failed"
+		})
+	}
+})
+
 module.exports = router;
