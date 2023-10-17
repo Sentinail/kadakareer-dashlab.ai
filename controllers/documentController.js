@@ -24,8 +24,20 @@ const client = new TextractClient({
 });
 
 const dpl = async (documentBuffers) => {
-  // Implement logic here
-  return null;
+  const textractResults = [result]
+
+  const extractionResults = [];
+
+  textractResults.forEach((textractResult, index) => {
+    const keyValues = textractUtils.extractKeyValuePairs(textractResult)
+
+    extractionResults.push({
+      page: index + 1,
+      key_values: keyValues,
+    });
+  })
+
+  return extractionResults;
 };
 
 const dps = (documentBuffers) => {
@@ -65,6 +77,7 @@ const magef = async (documentBuffers) => {
   });
 
   const extractionResults = [];
+
   textractResults.forEach((textractResult, index) => {
     const keyValues = textractUtils.extractKeyValuePairs(textractResult);
     const tables = textractUtils.getTableValues(textractResult);
