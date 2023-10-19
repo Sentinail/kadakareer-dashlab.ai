@@ -10,7 +10,7 @@
     Output : 
     [[name: "John"], [surname: "Doe"], [age: "25"], [sex: "male"]]
 */
-const result = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg1.json");
+const result = require("../test_documents/DOH-PEME-LB.json");
 const result2 = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg2.json");
 const result3 = require("../test_documents/HIVST.json");
 const textractUtils = require("../utils/textractUtils");
@@ -25,8 +25,27 @@ const client = new TextractClient({
 });
 
 const dpl = async (documentBuffers) => {
-  // Implement logic here
-  return null;
+  const textractResults = await textractUtils.sendRequestToTextractClient(
+    documentBuffers,
+    AnalyzeDocumentCommand,
+    client
+  );
+
+  const extractionResults = [];
+
+
+  textractResults.forEach((textractResult, index) => {
+    const keyValues = textractUtils.extractKeyValuePairs(textractResult);
+    const tables = textractUtils.extractDPLTableKeyValues(textractResult);
+
+    extractionResults.push({
+      page: index + 1,
+      key_values: keyValues,
+      tables: tables,
+    });
+  })
+
+  return extractionResults;
 };
 
 const dps = (documentBuffers) => {
@@ -61,22 +80,15 @@ const mai = async (documentBuffers) => {
 };
 
 const magef = async (documentBuffers) => {
-  const textractResults = [];
-
-  documentBuffers.forEach((documentBuffer) => {
-    const command = new AnalyzeDocumentCommand({
-      Document: {
-        Bytes: documentBuffer,
-      },
-      FeatureTypes: ["TABLES", "FORMS", "SIGNATURES", "LAYOUT"],
-    });
-
-    client.send(command).then((result) => {
-      textractResults.push(result);
-    });
-  });
+  
+  const textractResults = await textractUtils.sendRequestToTextractClient(
+    documentBuffers,
+    AnalyzeDocumentCommand,
+    client
+  );
 
   const extractionResults = [];
+
   textractResults.forEach((textractResult, index) => {
     const keyValues = textractUtils.extractKeyValuePairs(textractResult);
     const tables = textractUtils.getTableValues(textractResult);
