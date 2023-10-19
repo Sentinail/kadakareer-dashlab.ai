@@ -85,6 +85,74 @@ const extractWordLineBasedOnArrayOfWordIDs = (textractResult, relationship) => {
 	return line.join("_").toLowerCase().replace(/[:?]*$/, '');
 }
 
+const extractDPSTableKeyValues = (textractResult) => {
+
+    const tables = textractResult.Blocks.filter((block) => {
+		return block.BlockType === "TABLE"
+	})
+
+	const tableKeyValuePairs = []
+
+	tables.forEach((table, index) => {
+		const keyValuePairs = []
+
+		const children = table.Relationships.find(relationship => {
+			return relationship.Type === "CHILD"
+		})
+
+		const maxCol = textractResult.Blocks.find(block => {
+			return block.Id === children.Ids[children.Ids.length - 1]
+		}).ColumnIndex
+
+		const rowIDs = extractAllRowIDs(table, maxCol)
+
+		rowIDs.forEach((row) => {
+			const cellBlockForField = textractResult.Blocks.find((block) => {
+				return block.Id === row[0]
+			})
+
+			let fieldName;
+			let value;
+
+			cellBlockForField.Relationships?.forEach(relationship => {
+				if (relationship.Type === "CHILD") {
+					fieldName = extractWordLineBasedOnArrayOfWordIDs(textractResult, relationship)
+				}
+			})
+
+			if (cellBlockForField.ColumnIndex === 1) {
+				for (let i = 1; i < row.length; i++) {
+					const cell = textractResult.Blocks.find((block) => {
+						return block.Id === row[i] 
+					})
+
+					cell.Relationships?.forEach(relationship => {
+						if (relationship.Type === "CHILD") {
+							relationship.Ids.forEach((id) => {
+								const selectionCell = textractResult.Blocks.find((block) => {
+									return block.Id === id
+								})
+
+								if (selectionCell.BlockType === "SELECTION_ELEMENT" && selectionCell.SelectionStatus === "SELECTED") {
+									value = i
+								}
+							})
+						}
+					})
+				}
+
+				keyValuePairs.push([fieldName, value])
+			}
+		})
+		tableKeyValuePairs.push({
+			table: index + 1,
+			keyValuePairs
+		})
+	})
+
+	return tableKeyValuePairs
+}
+
 const extractDPLTableKeyValues = () => {
 	const textractResult = result
 
@@ -353,5 +421,6 @@ module.exports = {
 	getTableValues,
 	extractAllRowIDs,
 	sendRequestToTextractClient,
-	extractDPLTableKeyValues
+	extractDPLTableKeyValues,
+	extractDPSTableKeyValues
 }

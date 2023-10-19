@@ -18,9 +18,11 @@ router.post("/DOH-PEME-SB", upload.array("document"), (req, res) => {
 		return file.buffer;
 	});
 
-	// handle the file using documentHandler.dps(documentBuffers) here
+	const result = documentHandler.dps(documentBuffers);
 
-	res.send("Result");
+	res.json({
+		result: result,
+	});
 });
 
 router.post("/DOH-PEMER-LB", upload.array("document"), (req, res) => {
