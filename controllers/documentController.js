@@ -10,7 +10,7 @@
     Output : 
     [[name: "John"], [surname: "Doe"], [age: "25"], [sex: "male"]]
 */
-const result = require("../test_documents/DOH-PEME-LB.json");
+const result = require("../test_documents/DOH-PEME-SB.json");
 const result2 = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg2.json");
 const result3 = require("../test_documents/HIVST.json");
 const textractUtils = require("../utils/textractUtils");
@@ -51,9 +51,27 @@ const dpl = async (documentBuffers) => {
   return extractionResults;
 };
 
-const dps = (documentBuffers) => {
-  // Implement logic here
-  return null;
+const dps = async (documentBuffers) => {
+  const textractResults = await textractUtils.sendRequestToTextractClient(
+    documentBuffers,
+    AnalyzeDocumentCommand,
+    client
+  );
+
+  const extractionResults = [];
+
+  textractResults.forEach((textractResult, index) => {
+    const keyValues = textractUtils.extractKeyValuePairs(textractResult);
+    const tables = textractUtils.extractDPSTableKeyValues(textractResult);
+
+    extractionResults.push({
+      page: index + 1,
+      key_values: keyValues,
+      tables: tables,
+    });
+  })
+
+  return extractionResults;
 };
 
 const dprl = async (documentBuffers) => {
@@ -105,16 +123,6 @@ const magef = async (documentBuffers) => {
 
   return extractionResults;
 };
-
-// Input : documentBuffers
-/* Output : 
-    [
-        {
-            document: int
-            extractedWord: string[]
-        }
-    ]
-*/
 
 const extractWords = async (documentBuffers) => {
   const textractResult = await textractUtils.sendRequestToTextractClient(
