@@ -12,6 +12,7 @@
 */
 const result = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg1.json");
 const result2 = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg2.json");
+const result3 = require("../test_documents/HIVST.json");
 const textractUtils = require("../utils/textractUtils");
 
 const {
@@ -45,7 +46,18 @@ const dprs = async (documentBuffers) => {
 
 const mai = async (documentBuffers) => {
   // Implement logic here
-  return null;
+  const extractionResults = [];
+
+  textractResults.forEach((textractResult, index) => {
+    const keyValues = textractUtils.extractKeyValuePairs(textractResult);
+
+    extractionResults.push({
+      page: index + 1,
+      key_values: keyValues,
+    });
+  });
+
+  return extractionResults;
 };
 
 const magef = async (documentBuffers) => {
