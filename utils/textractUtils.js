@@ -92,16 +92,20 @@ const extractDPLTableKeyValues = () => {
 		return block.BlockType === "TABLE"
 	})
 
-	const keyValuesSets = textractResult.Blocks.filter((block) => {
-		return block.BlockType === "KEY_VALUE_SET"
-	})
-
 	const tableKeyValuePairs = []
-
 
 	tables.forEach((table, index) => {
 		const keyValuePairs = []
-		const rowIDs = extractAllRowIDs(table, 3)
+
+		const children = table.Relationships.find(relationship => {
+			return relationship.Type === "CHILD"
+		})
+
+		const maxCol = textractResult.Blocks.find(block => {
+			return block.Id === children.Ids[children.Ids.length - 1]
+		}).ColumnIndex
+
+		const rowIDs = extractAllRowIDs(table, maxCol)
 
 		rowIDs.forEach((row) => {
 			const cellBlockForField = textractResult.Blocks.find((block) => {
@@ -147,7 +151,7 @@ const extractDPLTableKeyValues = () => {
 		})
 	})
 
-	return tableKeyValuePairs[0].keyValuePairs
+	return tableKeyValuePairs
 }
 
 const extractLines = (textractResult) => {
