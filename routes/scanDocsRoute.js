@@ -3,26 +3,44 @@ const router = express.Router();
 const upload = require("../middlewares/multerMiddleware");
 const documentHandler = require("../controllers/documentController");
 
-router.post("/DOH-PEME-LB", upload.array("document"), (req, res) => {
+router.post("/DOH-PEME-LB", upload.array("document"), async (req, res) => {
 	const documentBuffers = req.files?.map((file) => {
 		return file.buffer;
 	});
 
-	// handle the file using documentHandler.dpl(documentBuffers) here
+	try {
+		const result = await documentHandler.dpl(documentBuffers);
 
-	res.send("Result");
+		res.json({
+			status: "Success",
+			result: result
+		})
+	} catch (err) {
+		console.log(err)
+		res.status(500).json({
+			status: "Failed"
+		})
+	}
 });
 
-router.post("/DOH-PEME-SB", upload.array("document"), (req, res) => {
+router.post("/DOH-PEME-SB", upload.array("document"), async (req, res) => {
 	const documentBuffers = req.files?.map((file) => {
 		return file.buffer;
 	});
 
-	const result = documentHandler.dps(documentBuffers);
+	try {
+		const result = await documentHandler.dps(documentBuffers);
 
-	res.json({
-		result: result,
-	});
+		res.json({
+			status: "Success",
+			result: result
+		})
+	} catch (err) {
+		console.log(err)
+		res.status(500).json({
+			status: "Failed"
+		})
+	}
 });
 
 router.post("/DOH-PEMER-LB", upload.array("document"), (req, res) => {
@@ -45,56 +63,64 @@ router.post("/DOH-PEMER-SB", upload.array("document"), (req, res) => {
 	res.send("Result");
 });
 
-router.post("/MFOWS-Annex_I-HIVST", upload.array("document"), (req, res) => {
+router.post("/MFOWS-Annex_I-HIVST", upload.array("document"), async (req, res) => {
 	const documentBuffers = req.files?.map((file) => {
 		return file.buffer;
 	});
 
-	// handle the file using documentHandler.mai(documentBuffers) here
+	try {
+		const result = await documentHandler.mai(documentBuffers);
 
-	res.send("Result");
+		res.json({
+			status: "Success",
+			result: result
+		})
+	} catch (err) {
+		console.log(err)
+		res.status(500).json({
+			status: "Failed"
+		})
+	}
 });
 
-router.post(
-	"/MFOWS-Annex_G-Psychological_Evaluation_Form",
-	upload.array("document"),
-	(req, res) => {
-		const documentBuffers = req.files?.map((file) => {
-			return file.buffer;
-		});
+router.post("/MFOWS-Annex_G-Psychological_Evaluation_Form", upload.array("document"), async (req, res) => {
+	const documentBuffers = req.files?.map((file) => {
+		return file.buffer;
+	});
 
-		const result = documentHandler.magef(documentBuffers);
+	try {
+		const result = await documentHandler.magef(documentBuffers);
 
 		res.json({
-			result: result,
-		});
+			status: "Success",
+			result: result
+		})
+	} catch (err) {
+		console.log(err)
+		res.status(500).json({
+			status: "Failed"
+		})
 	}
-);
+});
 
-// Input : Document buffers
-/* Output : 
-    [
-        {
-            documentPage: int
-            extractedWord: string[]
-        }
-    ]
-*/
-router.post(
-	"/extract_document_texts",
-	upload.array("document"),
-	async (req, res) => {
-		const documentBuffers = req.files?.map((file) => {
-			return file.buffer;
-		});
+router.post("/extract_document_texts", upload.array("document"), async (req, res) => {
+	const documentBuffers = req.files?.map((file) => {
+		return file.buffer;
+	});
 
+	try {
 		const result = await documentHandler.extractWords(documentBuffers);
-		console.log(result);
 		res.json({
-			result: result,
-		});
+			status: "Success",
+			result: result
+		})
+	} catch (err) {
+		console.log(err)
+		res.status(500).json({
+			status: "Failed"
+		})
 	}
-);
+});
 
 router.post("store_document", async (req, res) => {
 	const documentKeyValuePairs = req.body.data

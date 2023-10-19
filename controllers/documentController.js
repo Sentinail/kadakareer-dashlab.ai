@@ -85,7 +85,12 @@ const dprs = async (documentBuffers) => {
 };
 
 const mai = async (documentBuffers) => {
-  // Implement logic here
+  const textractResults = await textractUtils.sendRequestToTextractClient(
+    documentBuffers,
+    AnalyzeDocumentCommand,
+    client
+  );
+  
   const extractionResults = [];
 
   textractResults.forEach((textractResult, index) => {
