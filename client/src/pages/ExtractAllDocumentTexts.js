@@ -1,28 +1,28 @@
 import React, { useState } from "react";
-import { ExtractAllDocumentTextsContainerStyles } from "../styled-components/ExtractAllDocumentTextsStyles";
+import { ExtractDocumentPageContainerStyles } from "../styled-components/ExtractAllDocumentTextsStyles";
 import ExtractDocumentDescription from "../components/ExtractDocumentDescription";
 import ExtractionInputSection from "../components/ExtractionInputSection";
 import ExtractionOutputSection from "../components/ExtractionOutputSection";
 
-const sampleResult = {
-	result: [
-		{
-			documentPage: 1,
-			extractedWord: ["Hello-1", "World-1", "Hi-1", "Wilson-1", "LoremIpsumDoret", "LoremIpsumDoret", "LoremIpsumDoret"]
-		},
-		{
-			documentPage: 2,
-			extractedWord: ["Hello-2", "World-2", "Hi-2", "Wilson-2"]
-		}
-	]
-}
+// const sampleResult = {
+// 	result: [
+// 		{
+// 			documentPage: 1,
+// 			extractedWord: ["Hello-1", "World-1", "Hi-1", "Wilson-1", "LoremIpsumDoret", "LoremIpsumDoret", "LoremIpsumDoret"]
+// 		},
+// 		{
+// 			documentPage: 2,
+// 			extractedWord: ["Hello-2", "World-2", "Hi-2", "Wilson-2"]
+// 		}
+// 	]
+// }
 
 const ExtractAllDocumentTexts = () => {
     const [ result, setResult ] = useState()
 
 	return (
 		<>
-			<ExtractAllDocumentTextsContainerStyles>
+			<ExtractDocumentPageContainerStyles>
 				<div className="hero_section">
 					<ExtractDocumentDescription
 						title={"Extract All Document Texts"}
@@ -46,7 +46,7 @@ const ExtractAllDocumentTexts = () => {
 						</ExtractionOutputSection>
 					}
 				</div>
-			</ExtractAllDocumentTextsContainerStyles>
+			</ExtractDocumentPageContainerStyles>
 		</>
 	);
 };
