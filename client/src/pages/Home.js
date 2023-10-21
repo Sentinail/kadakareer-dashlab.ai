@@ -1,6 +1,5 @@
 import React from 'react'
 import { SectionContainer, ItemCenter, Footer } from '../styled-components/HomeStyle'
-import "bootstrap/dist/css/bootstrap.min.css"
 import { useTheme } from "../contexts/themeContext";
 import group from "../assets/group.png"
 import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
