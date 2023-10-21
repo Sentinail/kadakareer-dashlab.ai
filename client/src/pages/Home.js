@@ -41,7 +41,7 @@ const Home = () => {
               <h1 style={{ color: whiteColor }}>About Project</h1>
             </div>
             <div>
-              <p style={{ color: whiteColor, opacity: '60%', marginTop: '40px', textAlign: 'Center', width: '920px' }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore! Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore!</p>
+              <p style={{ color: whiteColor, opacity: '60%', marginTop: '40px', textAlign: 'Center', width: '920px' }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore! Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore!Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore! Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore!</p>
             </div>
           </div>
         </SectionContainer>
