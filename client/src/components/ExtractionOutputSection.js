@@ -1,9 +1,15 @@
-import React from "react";
-import { ExtractedPageBlockStyle, ExtractedWordBlockStyle, ExtractionOutputSectionStyles } from "../styled-components/ExtractionOutputSectionStyles";
+import React, { useEffect, useState } from "react";
+import {
+	ExtractedPageBlockStyle,
+	ExtractedWordBlockStyle,
+	ExtractionOutputSectionStyles,
+} from "../styled-components/ExtractionOutputSectionStyles";
 import Button from "./Button";
 import { useTheme } from "../contexts/themeContext";
+import axios from "axios";
+import Loading from "./Loading";
 
-const ExtractedWordBlock = ({word}) => {
+const ExtractedWordBlock = ({ word }) => {
 	const { primaryColor, secondaryColor, tertiaryColor } = useTheme();
 	return (
 		<>
@@ -11,43 +17,205 @@ const ExtractedWordBlock = ({word}) => {
 				{word}
 			</ExtractedWordBlockStyle>
 		</>
-	)
-}
+	);
+};
 
-const PageBlock = ({pageNum, words}) => {
+const PageBlock = ({ pageNum, words }) => {
 	return (
 		<>
 			<ExtractedPageBlockStyle>
-				<h2> Words Extracted On Page: {pageNum}  </h2>
-				<div className="results">
-					{words.map(word => {
-						return <ExtractedWordBlock word={word}></ExtractedWordBlock>
+				<h2> Words Extracted On Page: {pageNum} </h2>
+				<form className="results">
+					{words.map((word) => {
+						return (
+							<ExtractedWordBlock
+								word={word}
+							></ExtractedWordBlock>
+						);
 					})}
-				</div>
+				</form>
 			</ExtractedPageBlockStyle>
 		</>
-	)
-}
+	);
+};
 
-const ExtractionOutputSection = ({result}) => {
-	const { primaryColor, secondaryColor, tertiaryColor } = useTheme();
+const ExtractionOutputSection = ({ result, type = "EXTRACT_WORDS" }) => {
+	const { tertiaryColor } = useTheme();
+	const [keyValuePairs, setKeyValuePairs] = useState([]);
+	const [tableKeyValuePairs, setTableKeyValuePairs] = useState([]);
+	const [inputValues, setInputValues] = useState({});
+	const [isSending, setIsSending] = useState(false);
+
+	useEffect(() => {
+		const keyValuePairsArray = [];
+		const tableKeyValuePairsArray = [];
+
+		if (type !== "EXTRACT_WORDS") {
+			result?.result?.forEach((page) => {
+				keyValuePairsArray.push(page.key_values);
+
+				const tables = page.tables;
+				tables?.forEach((table) => {
+					tableKeyValuePairsArray.push(table.keyValuePairs);
+				});
+			});
+		}
+
+		const initialInputValues = {};
+
+		keyValuePairsArray.forEach((keyValuePairSet) => {
+			keyValuePairSet.forEach((keyValue) => {
+				initialInputValues[keyValue[0]] = keyValue[1];
+			});
+		});
+
+		tableKeyValuePairsArray.forEach((keyValuePairSet) => {
+			keyValuePairSet.forEach((keyValue) => {
+				initialInputValues[keyValue[0]] = keyValue[1];
+			});
+		});
+
+		setInputValues(initialInputValues);
+		setKeyValuePairs(keyValuePairsArray);
+		setTableKeyValuePairs(tableKeyValuePairsArray);
+	}, []);
+
+	const handleInputChange = (key, value) => {
+		setInputValues({
+			...inputValues,
+			[key]: value,
+		});
+	};
+
+	const handleSubmit = async () => {
+		setIsSending(true);
+		const payload = {
+			data: inputValues,
+			fileType: "dpl.csv",
+		};
+
+		try {
+			const result = await axios.post(
+				"http://localhost:9000/api/store_document",
+				payload
+			);
+			console.log(result);
+			setIsSending(false);
+		} catch (err) {
+			setIsSending(false);
+		}
+	};
 
 	return (
 		<>
 			<ExtractionOutputSectionStyles $tertiaryColor={tertiaryColor}>
+				{isSending && (
+					<Loading loadingMessage="Sending Form..."></Loading>
+				)}
 				<div className="output_buttons">
-					<Button $tertiaryColor={tertiaryColor}>
-						{" "}
-						Submit Extraction{" "}
+					<Button
+						onClick={handleSubmit}
+						$tertiaryColor={tertiaryColor}
+					>
+						Submit Extraction
 					</Button>
 				</div>
 				<div className="output_preview">
-					{ result && 
-						result.result.map(result => {
-							return <PageBlock pageNum={result.documentPage} words={result.extractedWord}></PageBlock>
-						})
-					}
-                </div>
+					{result &&
+						(type === "EXTRACT_WORDS" ? (
+							result.result.map((result) => (
+								<PageBlock
+									pageNum={result.documentPage}
+									words={result.extractedWord}
+								></PageBlock>
+							))
+						) : (
+							<>
+								<form className="result_form">
+									<div className="key_value_pairs">
+										<h1>Key-Value Pairs :</h1>
+										{keyValuePairs.map(
+											(keyValuePairSet, setIndex) =>
+												keyValuePairSet.map(
+													(keyValue, index) => (
+														<div
+															key={index}
+															className="key_value_pair"
+														>
+															<label
+																htmlFor={
+																	keyValue[0]
+																}
+															>
+																{" "}
+																{
+																	keyValue[0]
+																}{" "}
+															</label>
+															<input
+																type="text"
+																value={
+																	inputValues[
+																		keyValue[0]
+																	] || ""
+																}
+																onChange={(e) =>
+																	handleInputChange(
+																		keyValue[0],
+																		e.target
+																			.value
+																	)
+																}
+															/>
+														</div>
+													)
+												)
+										)}
+									</div>
+									<div className="table_values">
+										<h1>Table Values :</h1>
+										{tableKeyValuePairs.map(
+											(keyValuePairSet, setIndex) =>
+												keyValuePairSet.map(
+													(keyValue, index) => (
+														<div
+															key={index}
+															className="key_value_pair"
+														>
+															<label
+																htmlFor={
+																	keyValue[0]
+																}
+															>
+																{" "}
+																{
+																	keyValue[0]
+																}{" "}
+															</label>
+															<input
+																type="text"
+																value={
+																	inputValues[
+																		keyValue[0]
+																	] || ""
+																}
+																onChange={(e) =>
+																	handleInputChange(
+																		keyValue[0],
+																		e.target
+																			.value
+																	)
+																}
+															/>
+														</div>
+													)
+												)
+										)}
+									</div>
+								</form>
+							</>
+						))}
+				</div>
 			</ExtractionOutputSectionStyles>
 		</>
 	);

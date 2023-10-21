@@ -3,7 +3,7 @@ import { LoadingStyles } from "../styled-components/LoadingStyles";
 import { useTheme } from "../contexts/themeContext";
 import LoadingSpinner from "./LoadingSpinner";
 
-const Loading = () => {
+const Loading = ( {loadingMessage="Extracting Documents..."} ) => {
     const { primaryColor, secondaryColor, tertiaryColor } = useTheme()
 
 	return (
@@ -14,7 +14,7 @@ const Loading = () => {
                 </div>
                 <div className="content">
                     <LoadingSpinner></LoadingSpinner>
-                    <h1> Extracting Documents... </h1>
+                    <h1> {loadingMessage} </h1>
                 </div>
             </LoadingStyles>
 		</>

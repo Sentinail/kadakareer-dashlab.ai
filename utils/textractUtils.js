@@ -1,7 +1,47 @@
-const result = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg1.json")
+const result = require("../test_documents/DOH-PEME-LB.json")
 const result2 = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg2.json")
+const fs = require('fs');
 
-const extractAllRowIDs = (tableBlock) => {
+function getBoundingBox(polygon) {
+    let minX = Number.MAX_VALUE;
+    let minY = Number.MAX_VALUE;
+    let maxX = Number.MIN_VALUE;
+    let maxY = Number.MIN_VALUE;
+
+    for (const point of polygon) {
+        minX = Math.min(minX, point.X);
+        minY = Math.min(minY, point.Y);
+        maxX = Math.max(maxX, point.X);
+        maxY = Math.max(maxY, point.Y);
+    }
+
+    return {
+        minX,
+        minY,
+        maxX,
+        maxY,
+    };
+}
+
+function doPolygonsOverlap(polygonA, polygonB) {
+
+    const boxA = getBoundingBox(polygonA);
+    const boxB = getBoundingBox(polygonB);
+
+    if (
+        boxA.minX <= boxB.maxX &&
+        boxA.maxX >= boxB.minX &&
+        boxA.minY <= boxB.maxY &&
+        boxA.maxY >= boxB.minY
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
+//Extracts all cellIDs in a row way, e.g [cellCol1, cellCol2, cellCol3, cellCol4, ...cellCol8]
+const extractAllRowIDs = (tableBlock, maxColumn) => {
 	let result = []
 	if (tableBlock.BlockType === "TABLE") {
 		const relationships = tableBlock.Relationships
@@ -16,7 +56,7 @@ const extractAllRowIDs = (tableBlock) => {
 				for (let i = 0; i < childIDs.length; i++) {
 					row.push(childIDs[i])
 
-					if (counter >= 8) {
+					if (counter >= maxColumn) {
 						counter = 1
 						table.push(row)
 						row = []
@@ -31,6 +71,156 @@ const extractAllRowIDs = (tableBlock) => {
 	} else {
 		console.error("Please input Blocktype of 'TABLE'")
 	}
+}
+
+const extractWordLineBasedOnArrayOfWordIDs = (textractResult, relationship) => {
+	const line = []
+
+	relationship.Ids.forEach(wordID => {
+		const word = textractResult.Blocks.find(block => {
+			return block.Id === wordID
+		})
+		line.push(word.Text)
+	})
+
+	return line.join("_").toLowerCase().replace(/[:?]*$/, '');
+}
+
+const extractDPSTableKeyValues = (textractResult) => {
+
+    const tables = textractResult.Blocks.filter((block) => {
+		return block.BlockType === "TABLE"
+	})
+
+	const tableKeyValuePairs = []
+
+	tables.forEach((table, index) => {
+		const keyValuePairs = []
+
+		const children = table.Relationships.find(relationship => {
+			return relationship.Type === "CHILD"
+		})
+
+		const maxCol = textractResult.Blocks.find(block => {
+			return block.Id === children.Ids[children.Ids.length - 1]
+		}).ColumnIndex
+
+		const rowIDs = extractAllRowIDs(table, maxCol)
+
+		rowIDs.forEach((row) => {
+			const cellBlockForField = textractResult.Blocks.find((block) => {
+				return block.Id === row[0]
+			})
+
+			let fieldName;
+			let value;
+
+			cellBlockForField.Relationships?.forEach(relationship => {
+				if (relationship.Type === "CHILD") {
+					fieldName = extractWordLineBasedOnArrayOfWordIDs(textractResult, relationship)
+				}
+			})
+
+			if (cellBlockForField.ColumnIndex === 1) {
+				for (let i = 1; i < row.length; i++) {
+					const cell = textractResult.Blocks.find((block) => {
+						return block.Id === row[i] 
+					})
+
+					cell.Relationships?.forEach(relationship => {
+						if (relationship.Type === "CHILD") {
+							relationship.Ids.forEach((id) => {
+								const selectionCell = textractResult.Blocks.find((block) => {
+									return block.Id === id
+								})
+
+								if (selectionCell.BlockType === "SELECTION_ELEMENT" && selectionCell.SelectionStatus === "SELECTED") {
+									value = i
+								}
+							})
+						}
+					})
+				}
+
+				keyValuePairs.push([fieldName, value])
+			}
+		})
+		tableKeyValuePairs.push({
+			table: index + 1,
+			keyValuePairs
+		})
+	})
+
+	return tableKeyValuePairs
+}
+
+const extractDPLTableKeyValues = () => {
+	const textractResult = result
+
+    const tables = textractResult.Blocks.filter((block) => {
+		return block.BlockType === "TABLE"
+	})
+
+	const tableKeyValuePairs = []
+
+	tables.forEach((table, index) => {
+		const keyValuePairs = []
+
+		const children = table.Relationships.find(relationship => {
+			return relationship.Type === "CHILD"
+		})
+
+		const maxCol = textractResult.Blocks.find(block => {
+			return block.Id === children.Ids[children.Ids.length - 1]
+		}).ColumnIndex
+
+		const rowIDs = extractAllRowIDs(table, maxCol)
+
+		rowIDs.forEach((row) => {
+			const cellBlockForField = textractResult.Blocks.find((block) => {
+				return block.Id === row[0]
+			})
+
+			let fieldName;
+			let value;
+
+			cellBlockForField.Relationships?.forEach(relationship => {
+				if (relationship.Type === "CHILD") {
+					fieldName = extractWordLineBasedOnArrayOfWordIDs(textractResult, relationship)
+				}
+			})
+
+			if (cellBlockForField.ColumnIndex === 1) {
+				for (let i = 1; i < row.length; i++) {
+					const cell = textractResult.Blocks.find((block) => {
+						return block.Id === row[i] 
+					})
+
+					cell.Relationships?.forEach(relationship => {
+						if (relationship.Type === "CHILD") {
+							relationship.Ids.forEach((id) => {
+								const selectionCell = textractResult.Blocks.find((block) => {
+									return block.Id === id
+								})
+
+								if (selectionCell.BlockType === "SELECTION_ELEMENT" && selectionCell.SelectionStatus === "SELECTED") {
+									value = i
+								}
+							})
+						}
+					})
+				}
+
+				keyValuePairs.push([fieldName, value])
+			}
+		})
+		tableKeyValuePairs.push({
+			table: index + 1,
+			keyValuePairs
+		})
+	})
+
+	return tableKeyValuePairs
 }
 
 const extractLines = (textractResult) => {
@@ -144,7 +334,7 @@ const getTableValues = (textractResult) => {
 	})
 
 	tableBlocks.forEach((tableBlock, index) => {
-		const rowIDs = extractAllRowIDs(tableBlock)
+		const rowIDs = extractAllRowIDs(tableBlock, 8)
 		const keyValuePairs = []
 	
 		rowIDs.forEach((row) => {
@@ -225,11 +415,26 @@ const sendRequestToTextractClient = async (documentBuffers, AnalyzeDocumentComma
     return textractResult
 }
 
+function writeJSONToFile(filename, data) {
+	const jsonData = JSON.stringify(data, null, 2);
+
+	fs.writeFile(filename, jsonData, 'utf8', (err) => {
+	  if (err) {
+		console.error(`Error writing JSON to ${filename}: ${err}`);
+	  } else {
+		console.log(`JSON data has been written to ${filename}`);
+	  }
+	});
+  }
+
 
 module.exports = {
     extractLines,
     extractKeyValuePairs,
 	getTableValues,
 	extractAllRowIDs,
-	sendRequestToTextractClient
+	sendRequestToTextractClient,
+	extractDPLTableKeyValues,
+	extractDPSTableKeyValues,
+	writeJSONToFile
 }

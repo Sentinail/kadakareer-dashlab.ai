@@ -10,9 +10,13 @@
     Output : 
     [[name: "John"], [surname: "Doe"], [age: "25"], [sex: "male"]]
 */
-const result = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg1.json");
+const result = require("../test_documents/DOH-PEME-SB.json");
 const result2 = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg2.json");
+const result3 = require("../test_documents/HIVST.json");
 const textractUtils = require("../utils/textractUtils");
+const converter = require("json-2-csv")
+const fs = require("fs")
+const path = require("path")
 
 const {
   TextractClient,
@@ -24,13 +28,50 @@ const client = new TextractClient({
 });
 
 const dpl = async (documentBuffers) => {
-  // Implement logic here
-  return null;
+  const textractResults = await textractUtils.sendRequestToTextractClient(
+    documentBuffers,
+    AnalyzeDocumentCommand,
+    client
+  );
+
+  const extractionResults = [];
+
+
+  textractResults.forEach((textractResult, index) => {
+    const keyValues = textractUtils.extractKeyValuePairs(textractResult);
+    const tables = textractUtils.extractDPLTableKeyValues(textractResult);
+
+    extractionResults.push({
+      page: index + 1,
+      key_values: keyValues,
+      tables: tables,
+    });
+  })
+
+  return extractionResults;
 };
 
-const dps = (documentBuffers) => {
-  // Implement logic here
-  return null;
+const dps = async (documentBuffers) => {
+  const textractResults = await textractUtils.sendRequestToTextractClient(
+    documentBuffers,
+    AnalyzeDocumentCommand,
+    client
+  );
+
+  const extractionResults = [];
+
+  textractResults.forEach((textractResult, index) => {
+    const keyValues = textractUtils.extractKeyValuePairs(textractResult);
+    const tables = textractUtils.extractDPSTableKeyValues(textractResult);
+
+    extractionResults.push({
+      page: index + 1,
+      key_values: keyValues,
+      tables: tables,
+    });
+  })
+
+  return extractionResults;
 };
 
 const dprl = async (documentBuffers) => {
@@ -44,27 +85,36 @@ const dprs = async (documentBuffers) => {
 };
 
 const mai = async (documentBuffers) => {
-  // Implement logic here
-  return null;
-};
+  const textractResults = await textractUtils.sendRequestToTextractClient(
+    documentBuffers,
+    AnalyzeDocumentCommand,
+    client
+  );
+  
+  const extractionResults = [];
 
-const magef = async (documentBuffers) => {
-  const textractResults = [];
+  textractResults.forEach((textractResult, index) => {
+    const keyValues = textractUtils.extractKeyValuePairs(textractResult);
 
-  documentBuffers.forEach((documentBuffer) => {
-    const command = new AnalyzeDocumentCommand({
-      Document: {
-        Bytes: documentBuffer,
-      },
-      FeatureTypes: ["TABLES", "FORMS", "SIGNATURES", "LAYOUT"],
-    });
-
-    client.send(command).then((result) => {
-      textractResults.push(result);
+    extractionResults.push({
+      page: index + 1,
+      key_values: keyValues,
     });
   });
 
+  return extractionResults;
+};
+
+const magef = async (documentBuffers) => {
+  
+  const textractResults = await textractUtils.sendRequestToTextractClient(
+    documentBuffers,
+    AnalyzeDocumentCommand,
+    client
+  );
+
   const extractionResults = [];
+
   textractResults.forEach((textractResult, index) => {
     const keyValues = textractUtils.extractKeyValuePairs(textractResult);
     const tables = textractUtils.getTableValues(textractResult);
@@ -78,16 +128,6 @@ const magef = async (documentBuffers) => {
 
   return extractionResults;
 };
-
-// Input : documentBuffers
-/* Output : 
-    [
-        {
-            document: int
-            extractedWord: string[]
-        }
-    ]
-*/
 
 const extractWords = async (documentBuffers) => {
   const textractResult = await textractUtils.sendRequestToTextractClient(
@@ -111,6 +151,31 @@ const extractWords = async (documentBuffers) => {
   return a;
 };
 
+const readJSONToCSVAndStore = async (fileDirectory, filename, jsonDocuments) => {
+  try {
+    const filePath = path.join(fileDirectory, filename);
+
+    let existingCSV;
+    let existingJSON = [];
+
+    if (fs.existsSync(filePath)) {
+      existingCSV = fs.readFileSync(filePath, 'utf-8');
+      existingJSON = await converter.csv2json(existingCSV);
+    }
+
+    const newJSON = [...existingJSON, ...jsonDocuments];
+
+    const updatedCSV = await converter.json2csv(newJSON);
+    console.log(updatedCSV);
+
+    fs.writeFileSync(filePath, updatedCSV, 'utf-8');
+    console.log(`CSV data has been saved to ${filePath}`);
+    return updatedCSV
+  } catch (error) {
+    console.error('Error while reading, converting, or saving CSV:', error);
+  }
+};
+
 module.exports = {
   dpl,
   dps,
@@ -119,4 +184,5 @@ module.exports = {
   mai,
   magef,
   extractWords,
+  readJSONToCSVAndStore,
 };
