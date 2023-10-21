@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 export const SectionContainer = styled.section`
     min-height: 100svh;
-    padding: 10rem 9% 2rem;
+    padding: 2rem 9% 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,7 +15,6 @@ export const SectionContainer = styled.section`
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        align-self: flex-start;
     }
 
     .aboutContainer div h1{
