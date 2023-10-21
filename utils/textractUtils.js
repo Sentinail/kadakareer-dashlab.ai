@@ -1,5 +1,6 @@
 const result = require("../test_documents/DOH-PEME-LB.json")
 const result2 = require("../test_documents/MFOWS-Annex_G-Psychological_Evaluation Form_Pg2.json")
+const fs = require('fs');
 
 function getBoundingBox(polygon) {
     let minX = Number.MAX_VALUE;
@@ -414,6 +415,18 @@ const sendRequestToTextractClient = async (documentBuffers, AnalyzeDocumentComma
     return textractResult
 }
 
+function writeJSONToFile(filename, data) {
+	const jsonData = JSON.stringify(data, null, 2);
+
+	fs.writeFile(filename, jsonData, 'utf8', (err) => {
+	  if (err) {
+		console.error(`Error writing JSON to ${filename}: ${err}`);
+	  } else {
+		console.log(`JSON data has been written to ${filename}`);
+	  }
+	});
+  }
+
 
 module.exports = {
     extractLines,
@@ -422,5 +435,6 @@ module.exports = {
 	extractAllRowIDs,
 	sendRequestToTextractClient,
 	extractDPLTableKeyValues,
-	extractDPSTableKeyValues
+	extractDPSTableKeyValues,
+	writeJSONToFile
 }

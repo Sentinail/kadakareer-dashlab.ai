@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const upload = require("../middlewares/multerMiddleware");
 const documentHandler = require("../controllers/documentController");
+const converter = require("json-2-csv")
+const path = require("path")
 
 router.post("/DOH-PEME-LB", upload.array("document"), async (req, res) => {
 	const documentBuffers = req.files?.map((file) => {
@@ -122,17 +124,19 @@ router.post("/extract_document_texts", upload.array("document"), async (req, res
 	}
 });
 
-router.post("store_document", async (req, res) => {
-	const documentKeyValuePairs = req.body.data
-	const fileType = req.body.fileType
+router.post("/store_document", async (req, res) => {
+	const body = req.body
+	const documentKeyValuePairs = body.data
+	const fileType = body.fileType
 
 	try {
-		const result = await documentHandler.readCSVToJSONAndStore("../csv", fileType, documentKeyValuePairs)
+		const result = await documentHandler.readJSONToCSVAndStore(path.join(__dirname, "../", "csv"), fileType, [documentKeyValuePairs])
 		res.json({
 			status: "Success",
 			result: result
 		})
 	} catch (err) {
+		console.log(err)
 		res.status(500).json({
 			status: "Failed"
 		})
