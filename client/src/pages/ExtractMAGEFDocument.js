@@ -4,37 +4,87 @@ import ExtractDocumentDescription from "../components/ExtractDocumentDescription
 import ExtractionInputSection from "../components/ExtractionInputSection";
 import ExtractionOutputSection from "../components/ExtractionOutputSection";
 
-const sampleResult = {
-	status: "Success",
-	result: [
-		{
-			page: 1,
-			key_values: [
-				["EMPLOYER/COMPANY/RECRUITMENT_AGENCY_(IF_APPLICABLE)", "NONE"]
-			],
-			tables: [
-				{
-					table: 1,
-					keyValuePairs: [
-						["satisfactory_hearing", 1],
-						["satisfactory_sight", 1],
-						["satisfactory_color_vision?_(when_required)", 1],
-						["satisfactory_psychological_test", 1],
-					],
-				},
-			],
-		},
-		{
-			page: 2,
-			key_values: [
-				["Hello", "Hi Bro"]
-			]
-		}
-	],
-};
+// const sampleResult = {
+// 	status: "Success",
+// 	result: [
+// 		{
+// 			page: 1,
+// 			key_values: [
+// 				["EMPLOYER/COMPANY/RECRUITMENT_AGENCY_(IF_APPLICABLE)", "NONE"]
+// 			],
+// 			tables: [
+// 				{
+// 					table: 1,
+// 					keyValuePairs: [
+// 						["satisfactory_hearing", 1],
+// 						["satisfactory_sight", 1],
+// 						["satisfactory_color_vision?_(when_required)", 1],
+// 						["satisfactory_psychological_test", 1],
+// 					],
+// 				},
+// 				{
+// 					table: 2,
+// 					keyValuePairs: [
+// 						["satisfactory_hearing-2", 1],
+// 						["satisfactory_sight-2", 1],
+// 						["satisfactory_color_vision?_(when_required)-2", 1],
+// 						["satisfactory_psychological_test-2", 1],
+// 					],
+// 				},
+// 			],
+// 		},
+// 		{
+// 			page: 2,
+// 			key_values: [
+// 			],
+// 			tables: [
+// 				{
+// 					table: 1,
+// 					keyValuePairs: [
+// 						["satisfactory_hearing-3", 1],
+// 						["satisfactory_sight-3", 1],
+// 						["satisfactory_color_vision?_(when_required)-3", 1],
+// 						["satisfactory_psychological_test-3", 1],
+// 					],
+// 				},
+// 				{
+// 					table: 2,
+// 					keyValuePairs: [
+// 						["satisfactory_hearing-3", 1],
+// 						["satisfactory_sight-3", 1],
+// 						["satisfactory_color_vision?_(when_required)-3", 1],
+// 						["satisfactory_psychological_test-3", 1],
+// 					],
+// 				},
+// 			],
+// 		}
+		
+// 	],
+// };
 
 const ExtractMAGEFDocument = () => {
 	const [result, setResult] = useState();
+
+	const handleChange = (key, value) => {
+		setResult((prevResult) => {
+			const updatedResult = { ...prevResult };
+
+			const elementIndex = updatedResult.result.findIndex(
+				(element) => element.page === 1
+			);
+
+			if (elementIndex !== -1) {
+				updatedResult.result[elementIndex].key_values = [
+					[key, value],
+					...updatedResult.result[elementIndex].key_values,
+				];
+
+				return updatedResult;
+			}
+
+			return prevResult;
+		});
+	};
 
 	return (
 		<>
@@ -58,6 +108,7 @@ const ExtractMAGEFDocument = () => {
 					{result && (
 						<ExtractionOutputSection
 							result={result}
+							handleChange={handleChange}
 							type="MAGEF"
 						></ExtractionOutputSection>
 					)}

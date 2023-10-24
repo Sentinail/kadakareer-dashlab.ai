@@ -8,6 +8,7 @@ import Button from "./Button";
 import { useTheme } from "../contexts/themeContext";
 import axios from "axios";
 import Loading from "./Loading";
+import AppendNewKeyValuePairsForm from "./AppendNewKeyValuePairsForm";
 
 const ExtractedWordBlock = ({ word }) => {
 	const { primaryColor, secondaryColor, tertiaryColor } = useTheme();
@@ -39,7 +40,11 @@ const PageBlock = ({ pageNum, words }) => {
 	);
 };
 
-const ExtractionOutputSection = ({ result, type = "EXTRACT_WORDS" }) => {
+const ExtractionOutputSection = ({
+	handleChange,
+	result,
+	type = "EXTRACT_WORDS",
+}) => {
 	const { tertiaryColor } = useTheme();
 	const [keyValuePairs, setKeyValuePairs] = useState([]);
 	const [tableKeyValuePairs, setTableKeyValuePairs] = useState([]);
@@ -51,14 +56,15 @@ const ExtractionOutputSection = ({ result, type = "EXTRACT_WORDS" }) => {
 		const tableKeyValuePairsArray = [];
 
 		if (type !== "EXTRACT_WORDS") {
-			result?.result?.forEach((page) => {
-				keyValuePairsArray.push(page.key_values);
+			result?.result[0]?.page &&
+				result?.result?.forEach((page) => {
+					keyValuePairsArray.push(page.key_values);
 
-				const tables = page.tables;
-				tables?.forEach((table) => {
-					tableKeyValuePairsArray.push(table.keyValuePairs);
+					const tables = page.tables;
+					tables?.forEach((table) => {
+						tableKeyValuePairsArray.push(table.keyValuePairs);
+					});
 				});
-			});
 		}
 
 		const initialInputValues = {};
@@ -78,7 +84,7 @@ const ExtractionOutputSection = ({ result, type = "EXTRACT_WORDS" }) => {
 		setInputValues(initialInputValues);
 		setKeyValuePairs(keyValuePairsArray);
 		setTableKeyValuePairs(tableKeyValuePairsArray);
-	}, []);
+	}, [result]);
 
 	const handleInputChange = (key, value) => {
 		setInputValues({
@@ -119,6 +125,9 @@ const ExtractionOutputSection = ({ result, type = "EXTRACT_WORDS" }) => {
 					>
 						Submit Extraction
 					</Button>
+					<AppendNewKeyValuePairsForm callback={handleChange}>
+
+					</AppendNewKeyValuePairsForm>
 				</div>
 				<div className="output_preview">
 					{result &&

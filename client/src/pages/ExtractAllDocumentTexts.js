@@ -20,6 +20,27 @@ import ExtractionOutputSection from "../components/ExtractionOutputSection";
 const ExtractAllDocumentTexts = () => {
     const [ result, setResult ] = useState()
 
+	const handleChange = (key, value) => {
+		setResult((prevResult) => {
+			const updatedResult = { ...prevResult };
+
+			const elementIndex = updatedResult.result.findIndex(
+				(element) => element.page === 1
+			);
+
+			if (elementIndex !== -1) {
+				updatedResult.result[elementIndex].key_values = [
+					[key, value],
+					...updatedResult.result[elementIndex].key_values,
+				];
+
+				return updatedResult;
+			}
+
+			return prevResult;
+		});
+	};
+
 	return (
 		<>
 			<ExtractDocumentPageContainerStyles>
@@ -39,6 +60,7 @@ const ExtractAllDocumentTexts = () => {
 					<ExtractionInputSection
 						url={"http://localhost:9000/api/extract_document_texts"}
                         setResult={setResult}
+						handleChange={handleChange}
 					></ExtractionInputSection>
 					{result && 
 						<ExtractionOutputSection result={result}>
