@@ -1,0 +1,99 @@
+*{
+}
+
+@media (width <= 1200px) {
+    .imageContainer img{
+        width: 255px !important;
+    }
+    .imageContainer2 img{
+        width: 255px !important;
+    }
+    .textContainer h1{
+        font-size: 20px;
+    }
+    .textContainer p{
+        margin-top: 12px !important;
+        font-size: 14px;
+    }
+
+    .textContainer{
+        width: 100% !important;
+    }
+
+    .textContainer2{
+        width: 100% !important;
+    }
+
+    .textContainer2 h1{
+        font-size: 20px;
+    }
+    .textContainer2 p{
+        font-size: 14px;
+    }
+
+    .aboutSection .title h1{
+        font-size: 23px;
+    }
+
+    .aboutSection .textContainer3 p{
+        width: 100% !important;
+        font-size: 13px;
+        line-height: 25px;
+    }
+}
+
+@media (width <= 992px) {
+    .iconTop a{
+        padding: .5rem !important;
+    }
+    .iconTop a i{
+        font-size: 10px !important;
+    }
+}
+
+@media (width <= 768px) {
+    section:first-child div{
+        flex-direction: column;
+    }
+
+    section:first-child div img{
+        width: 100% !important;
+        margin-top: -100px;
+        margin-bottom: 80px;
+        margin-right: 0 !important;
+    }
+
+    .imageContainer2{
+        display: none;
+    }
+
+    .textContainer2{
+        text-align: center;
+    }
+
+    .textContainer2 p{
+        margin-right: 0px !important;
+    }
+}
+
+@media (width <= 600px) {
+    footer{
+        flex-direction: column;
+        padding: 1rem 9% !important;
+    }
+
+    footer div p{
+        font-size: 13px;
+    }
+
+    footer .iconTop{
+        margin-top: 15px;
+    }
+}
+
+@media (width <= 450px){
+    .dashlabs img{
+        width: 150px !important;
+    }
+
+}

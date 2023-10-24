@@ -1,12 +1,30 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { SectionContainer, ItemCenter, Footer } from '../styled-components/HomeStyle'
 import { useTheme } from "../contexts/themeContext";
 import group from "../assets/group.png"
 import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import '../styled-components/Breakpoints.css'
 
 const Home = () => {
-  const { whiteColor, fourthColor } = useTheme()
+  const { fourthColor } = useTheme()
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 993)
+
+  useEffect(() => {
+    const handleResize = () => {
+      const smallScreen = window.innerWidth < 993;
+      if (smallScreen !== isSmallScreen) {
+        setIsSmallScreen(smallScreen);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    }
+  }, [isSmallScreen])
+
   return (
 
     <>
@@ -14,33 +32,33 @@ const Home = () => {
       <div id='home'>
         <SectionContainer>
           <ItemCenter>
-            <div >
-              <img src={'https://dashlabs.ai/assets/images/image05.svg?v=4a9c1c0a'} style={{ width: '455px', marginRight: '50px' }} />
+            <div className='imageContainer'>
+              <img src={'https://dashlabs.ai/assets/images/image05.svg?v=4a9c1c0a'} />
             </div>
-            <div style={{ width: '645px' }}>
-              <h1 style={{ color: whiteColor }}>Automating Health / Medical Diagnostic Lab Processes with {'>'} 20x Speed Increase and 99.99% Accuracy</h1>
-              <p style={{ color: whiteColor, opacity: '60%', marginTop: '40px' }}>Dashlabs.ai offers a single, end-to-end platform for automating and optimizing healthcare and medical diagnostic lab operations including integration with any lab machine.</p>
+            <div className='textContainer'>
+              <h1>Automating Health / Medical Diagnostic Lab Processes with {'>'} 20x Speed Increase and 99.99% Accuracy</h1>
+              <p>Dashlabs.ai offers a single, end-to-end platform for automating and optimizing healthcare and medical diagnostic lab operations including integration with any lab machine.</p>
             </div>
           </ItemCenter>
         </SectionContainer>
         <SectionContainer style={{ backgroundColor: fourthColor }}>
           <ItemCenter>
-            <div style={{ width: '645px' }}>
-              <h1 style={{ color: whiteColor }}>Team SkillBlend Synergy</h1>
-              <p style={{ color: whiteColor, opacity: '60%', marginTop: '20px', lineHeight: '2rem', marginRight: '40px' }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore! Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore!</p>
+            <div className='textContainer2'>
+              <h1>Team SkillBlend Synergy</h1>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore! Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore!</p>
             </div>
-            <div>
-              <img src={group} alt='Teamwork' style={{ width: '455px' }} />
+            <div className='imageContainer2'>
+              <img src={group} alt='Teamwork' />
             </div>
           </ItemCenter>
         </SectionContainer>
         <SectionContainer>
-          <div className='aboutContainer'>
-            <div style={{ width: '645px' }}>
-              <h1 style={{ color: whiteColor }}>About Project</h1>
+          <div className='aboutSection'>
+            <div className='title'>
+              <h1>About Project</h1>
             </div>
-            <div>
-              <p style={{ color: whiteColor, opacity: '60%', marginTop: '40px', textAlign: 'Center', width: '920px' }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore! Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore!Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore! Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore!</p>
+            <div className='textContainer3'>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore! Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore!Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore! Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia nulla consequuntur rerum ab, eos officia quis nobis tempore totam non maiores ipsam adipisci nesciunt unde alias? Quia cupiditate ducimus labore!</p>
             </div>
           </div>
         </SectionContainer>
@@ -50,7 +68,7 @@ const Home = () => {
           </div>
           <div className='iconTop'>
             <a href='#home'>
-              <FontAwesomeIcon icon={faArrowUp} />
+              <FontAwesomeIcon icon={faArrowUp} size={isSmallScreen ? 'xs' : null} />
             </a>
           </div>
         </Footer>
