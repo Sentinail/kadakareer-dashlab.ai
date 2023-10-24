@@ -10,15 +10,54 @@ export const SectionContainer = styled.section`
     justify-content: center;
     align-items: center;
 
-    & .aboutContainer{
+    & .imageContainer img{
+        width: 455px;
+        margin-right: 50px
+    }
+
+    .textContainer{
+        color: #FFFFFF;
+        width: 645px;
+    }
+
+    .textContainer p{
+        opacity: 60%;
+        margin-top: 25px;
+    }
+
+    .textContainer2{
+        color: #FFFFFF;
+        width: 645px;
+    }
+
+    .textContainer2 p{
+        opacity: 60%;
+        margin-top: 20px;
+        line-height: 2rem;
+        margin-right: 40px
+    }
+
+    .imageContainer2 img{
+        width: 455px;
+    }
+    
+    .aboutSection{
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        color: #FFFFFF;
     }
 
-    .aboutContainer div h1{
+    .aboutSection title h1{
         text-align: center;
+    }
+
+    .textContainer3 p{
+        opacity: 60%;
+        margin-top: 40px;
+        text-align: center;
+        width: 920px;
     }
     `
 
@@ -39,7 +78,11 @@ export const Footer = styled.footer`
     opacity: 93%;
     color: #ffff;
 
-    & .iconTop a{
+    & div p{
+        opacity: 70%;
+    } 
+    
+    .iconTop a{
         display: inline-flex;
         justify-content: center;
         align-items: center;
@@ -48,7 +91,7 @@ export const Footer = styled.footer`
         border-radius: 0.3rem;
         transition: .5s ease;
         color: #ffffff;
-        font-size: 1.4rem
+        font-size: 1.4rem;
     }
 
     .iconTop a:hover{

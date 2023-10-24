@@ -15,12 +15,12 @@ export const DropdownButtonContainerStyles = styled.div`
         position: absolute;
         
         top: ${props => {
-            return props.$isActive ? "100%" : "-500%"
-        }};
+        return props.$isActive ? "100%" : "-500%"
+    }};
         transition: all 1s ease-in-out;
         background-color: ${props => {
-            return props.$primaryColor
-        }};
+        return props.$primaryColor
+    }};
         z-index: -1;
     }
 `
