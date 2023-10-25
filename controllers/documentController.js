@@ -98,8 +98,26 @@ const dprl = async (documentBuffers) => {
 };
 
 const dprs = async (documentBuffers) => {
-  // Implement logic here
-  return null;
+  const textractResults = await textractUtils.sendRequestToTextractClient(
+    documentBuffers,
+    AnalyzeDocumentCommand,
+    client
+  );
+
+  const extractionResults = [];
+
+  textractResults.forEach((textractResult, index) => {
+    const keyValues = textractUtils.extractKeyValuePairs(textractResult);
+    const tables = textractUtils.extractDPSTableKeyValues(textractResult);
+
+    extractionResults.push({
+      page: index + 1,
+      key_values: keyValues,
+      tables: tables,
+    });
+  })
+
+  return extractionResults;
 };
 
 const mai = async (documentBuffers) => {

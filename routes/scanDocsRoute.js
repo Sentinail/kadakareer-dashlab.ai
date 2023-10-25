@@ -65,14 +65,24 @@ router.post("/DOH-PEMER-LB", upload.array("document"), async (req, res) => {
 	}
 });
 
-router.post("/DOH-PEMER-SB", upload.array("document"), (req, res) => {
+router.post("/DOH-PEMER-SB", upload.array("document"), async (req, res) => {
 	const documentBuffers = req.files?.map((file) => {
 		return file.buffer;
 	});
 
-	// handle the file using documentHandler.dprs(documentBuffers) here
+	try {
+		const result = await documentHandler.dprs(documentBuffers);
 
-	res.send("Result");
+		res.json({
+			status: "Success",
+			result: result
+		})
+	} catch (err) {
+		console.log(err)
+		res.status(500).json({
+			status: "Failed"
+		})
+	}
 });
 
 router.post("/MFOWS-Annex_I-HIVST", upload.array("document"), async (req, res) => {
