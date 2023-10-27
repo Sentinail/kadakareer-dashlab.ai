@@ -8,6 +8,9 @@ import Home from './pages/Home'
 import ExtractDPLDocument from './pages/ExtractDPLDocument'
 import ExtractDPSDocument from './pages/ExtractDPSDocument'
 import ExtractMAGEFDocument from './pages/ExtractMAGEFDocument'
+import ExtractDPRSDocument from './pages/ExtractDPRSDocument'
+import ExtractDPRLDocument from './pages/ExtractDPRLDocument'
+import ExtractMAIDocument from './pages/ExtractMAIDocument'
 
 const App = () => {
   const { primaryColor, secondaryColor, tertiaryColor } = useTheme()
@@ -21,9 +24,9 @@ const App = () => {
           <Route path='/home' element={<Home></Home>}></Route>
           <Route path='/extract_document_texts' element={<ExtractAllDocumentTexts></ExtractAllDocumentTexts>}></Route>
           <Route path='/MFOWS-Annex_G-Psychological_Evaluation_Form' element={<ExtractMAGEFDocument></ExtractMAGEFDocument>}></Route>
-          <Route path='/MFOWS-Annex_I-HIVST' element={<p> Document </p>}></Route>
-          <Route path='/DOH-PEMER-SB' element={<p> Document </p>}></Route>
-          <Route path='/DOH-PEMER-LB' element={<p> Document </p>}></Route>
+          <Route path='/MFOWS-Annex_I-HIVST' element={<ExtractMAIDocument></ExtractMAIDocument>}></Route>
+          <Route path='/DOH-PEMER-SB' element={<ExtractDPRSDocument></ExtractDPRSDocument>}></Route>
+          <Route path='/DOH-PEMER-LB' element={<ExtractDPRLDocument></ExtractDPRLDocument>}></Route>
           <Route path='/DOH-PEME-SB' element={<ExtractDPSDocument></ExtractDPSDocument>}></Route>
           <Route path='/DOH-PEME-LB' element={<ExtractDPLDocument></ExtractDPLDocument>}></Route>
         </Routes>

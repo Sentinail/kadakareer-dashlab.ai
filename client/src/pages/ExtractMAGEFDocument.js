@@ -102,7 +102,7 @@ const ExtractMAGEFDocument = () => {
 				</div>
 				<div className="extraction_section">
 					<ExtractionInputSection
-						url={"http://localhost:9000/api/MFOWS-Annex_I-HIVST"}
+						url={"http://localhost:9000/api/MFOWS-Annex_G-Psychological_Evaluation_Form"}
 						setResult={setResult}
 					></ExtractionInputSection>
 					{result && (
