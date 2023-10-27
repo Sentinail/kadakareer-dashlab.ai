@@ -50,6 +50,7 @@ const ExtractionOutputSection = ({
 	const [tableKeyValuePairs, setTableKeyValuePairs] = useState([]);
 	const [inputValues, setInputValues] = useState({});
 	const [isSending, setIsSending] = useState(false);
+	const [isSubmitted, setIsSubmitted] = useState(false);
 
 	useEffect(() => {
 		const keyValuePairsArray = [];
@@ -84,6 +85,7 @@ const ExtractionOutputSection = ({
 		setInputValues(initialInputValues);
 		setKeyValuePairs(keyValuePairsArray);
 		setTableKeyValuePairs(tableKeyValuePairsArray);
+		setIsSubmitted(false)
 	}, [result]);
 
 	const handleInputChange = (key, value) => {
@@ -97,7 +99,7 @@ const ExtractionOutputSection = ({
 		setIsSending(true);
 		const payload = {
 			data: inputValues,
-			fileType: "dpl.csv",
+			fileType: `${type}.csv`,
 		};
 
 		try {
@@ -107,8 +109,33 @@ const ExtractionOutputSection = ({
 			);
 			console.log(result);
 			setIsSending(false);
+			setIsSubmitted(true)
 		} catch (err) {
 			setIsSending(false);
+		}
+	};
+
+	const handleDownload = async (fileName) => {
+		try {
+			const response = await axios.post(
+				"http://localhost:9000/api/download_zipped_csv",
+				{ fileName },
+				{ responseType: "blob" }
+			);
+
+			if (response.status === 200) {
+				const blob = new Blob([response.data]);
+				const url = window.URL.createObjectURL(blob);
+				const a = document.createElement("a");
+				a.href = url;
+				a.download = `${fileName}.zip`;
+				a.click();
+				window.URL.revokeObjectURL(url);
+			} else {
+				console.error("Error:", response.status, response.statusText);
+			}
+		} catch (error) {
+			console.error("Error:", error);
 		}
 	};
 
@@ -125,9 +152,25 @@ const ExtractionOutputSection = ({
 					>
 						Submit Extraction
 					</Button>
-					<AppendNewKeyValuePairsForm callback={handleChange}>
+					<AppendNewKeyValuePairsForm
+						callback={handleChange}
+					></AppendNewKeyValuePairsForm>
 
-					</AppendNewKeyValuePairsForm>
+					{type !== "EXTRACT_WORDS" && isSubmitted && (
+						<div
+							className="download_button"
+							style={{ marginLeft: "auto" }}
+						>
+							<Button
+								onClick={() => {
+									handleDownload(`${type}.csv`);
+								}}
+								$tertiaryColor={tertiaryColor}
+							>
+								Download CSV
+							</Button>
+						</div>
+					)}
 				</div>
 				<div className="output_preview">
 					{result &&
