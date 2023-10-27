@@ -17,6 +17,7 @@ const textractUtils = require("../utils/textractUtils");
 const converter = require("json-2-csv")
 const fs = require("fs")
 const path = require("path")
+const jszip = require("jszip")
 
 const {
   TextractClient,
@@ -212,6 +213,27 @@ const readJSONToCSVAndStore = async (fileDirectory, filename, jsonDocuments) => 
   }
 };
 
+const csvFileZipper = async (fileName, res) => {
+  try {
+    const filePath = path.join(__dirname, "../", "csv", fileName);
+
+    const fileData = await fs.promises.readFile(filePath);
+
+    const zip = new jszip();
+    zip.file(fileName, fileData);
+
+    const zippedContent = await zip.generateAsync({ type: "nodebuffer" });
+
+    res.setHeader("Content-Disposition", `attachment; filename=${fileName}.zip`);
+    res.setHeader("Content-Type", "application/zip");
+
+    res.send(zippedContent);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error generating or sending the zip file.");
+  }
+};
+
 module.exports = {
   dpl,
   dps,
@@ -221,4 +243,5 @@ module.exports = {
   magef,
   extractWords,
   readJSONToCSVAndStore,
+  csvFileZipper,
 };
