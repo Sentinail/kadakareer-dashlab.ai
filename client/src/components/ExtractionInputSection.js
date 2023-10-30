@@ -3,8 +3,66 @@ import { ExtractionInputSectionStyles, Image, ImageInputStyle } from "../styled-
 import Button from "./Button";
 import { useTheme } from "../contexts/themeContext";
 import FileInput from "./FileInput";
-import fetchDataWithPayload from "../utils/fetchDataWithPayload";
 import Loading from "./Loading";
+import fetchDataWithPayload from "../utils/fetchDataWithPayload"
+
+const sampleResult = {
+	status: "Success",
+	result: [
+		{
+			page: 1,
+			key_values: [
+				["EMPLOYER/COMPANY/RECRUITMENT_AGENCY_(IF_APPLICABLE)", "NONE"]
+			],
+			tables: [
+				{
+					table: 1,
+					keyValuePairs: [
+						["satisfactory_hearing", 1],
+						["satisfactory_sight", 1],
+						["satisfactory_color_vision?_(when_required)", 1],
+						["satisfactory_psychological_test", 1],
+					],
+				},
+				{
+					table: 2,
+					keyValuePairs: [
+						["satisfactory_hearing-2", 1],
+						["satisfactory_sight-2", 1],
+						["satisfactory_color_vision?_(when_required)-2", 1],
+						["satisfactory_psychological_test-2", 1],
+					],
+				},
+			],
+		},
+		{
+			page: 2,
+			key_values: [
+			],
+			tables: [
+				{
+					table: 1,
+					keyValuePairs: [
+						["satisfactory_hearing-3", 1],
+						["satisfactory_sight-3", 1],
+						["satisfactory_color_vision?_(when_required)-3", 1],
+						["satisfactory_psychological_test-3", 1],
+					],
+				},
+				{
+					table: 2,
+					keyValuePairs: [
+						["satisfactory_hearing-3", 1],
+						["satisfactory_sight-3", 1],
+						["satisfactory_color_vision?_(when_required)-3", 1],
+						["satisfactory_psychological_test-3", 1],
+					],
+				},
+			],
+		}
+		
+	],
+};
 
 const ImageInput = ({setFiles, index, ...props}) => {
 	const { primaryColor, secondaryColor, tertiaryColor } = useTheme();
@@ -34,16 +92,20 @@ const ExtractionInputSection = ({ url, setResult }) => {
 	const [ isLoading, setIsLoading ] = useState(false)
 
 	useEffect(() => {
-		const objectURLs = [];
 
-		const filesArray = Array.from(files);
-		filesArray.forEach((element) => {
-			const objectURL = URL.createObjectURL(element);
-			objectURLs.push(objectURL);
-		});
+		if (files) {
+			const objectURLs = [];
 
-		setFileObjectUrls(objectURLs);
-		console.log(objectURLs)
+			const filesArray = Array.from(files);
+			filesArray.forEach((element) => {
+				const objectURL = URL.createObjectURL(element);
+				objectURLs.push(objectURL);
+			});
+
+			setFileObjectUrls(objectURLs);
+		} else {
+			setFileObjectUrls([]);
+		}
 	}, [files]);
 
 	const handleSubmit = () => {
