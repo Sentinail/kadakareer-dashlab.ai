@@ -6,10 +6,26 @@ export const AppendNewKeyValuePairsFormContainer = styled.form`
     justify-content: center;
     align-items: center;
 
+    button {
+        @media screen and (max-width: 700px) {
+            width: 100%;
+        }
+    }
+
     input {
-        height: 100%;
+        min-height: 40px;
         border: none;
         border-radius: 5px;
         text-align: center;
+
+        @media screen and (max-width: 700px) {
+            width: 100%;
+        }
+    }
+
+    @media screen and (max-width: 700px) {
+        text-align: center;
+        flex-direction: column;
+        gap: 20px;
     }
 `

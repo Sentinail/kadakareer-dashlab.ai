@@ -9,6 +9,10 @@ export const ExtractionOutputSectionStyles = styled.div`
     & .output_buttons {
         display: flex;
         gap: 20px;
+
+        @media screen and (max-width: 700px) {
+            flex-direction: column;
+        }
     }
 
     & .output_preview {
@@ -37,8 +41,25 @@ export const ExtractionOutputSectionStyles = styled.div`
     & .key_value_pair {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         padding: 10px;
         border: 1px solid ${props => {return props.$tertiaryColor}};
+
+        label {
+            max-width: 300px;
+            overflow-wrap: break-word;
+        }
+
+        input {
+            text-align: center;
+            max-height: 30px;
+        }
+
+        @media screen and (max-width: 700px) {
+            text-align: center;
+            flex-direction: column;
+            gap: 20px;
+        }
     }
 `
 
